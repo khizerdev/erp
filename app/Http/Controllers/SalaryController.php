@@ -242,7 +242,7 @@ class SalaryController extends Controller
                             ->first();
                             
                             DB::transaction(function () use ($loan, $loanException, $employee, $salaryData, $advance, $loanInstallmentAmount, $currentMonth, $currentYear, $period, $startDate, $endDate) {
-                                
+    
                                 $data = [
                                     'employee_id' => $employee->id,
                                     'month' => $currentMonth,
@@ -264,6 +264,7 @@ class SalaryController extends Controller
                                     'loan_deducted' => $loan ? ($loanException ? 0 : $loanInstallmentAmount) : 0,
                                     'loan_id' => $loan ? ($loanException ? null : $loan->id) : null,
                                     'advance_id' => $advance ? $advance->id : null,
+                                    'salary_data' => json_encode($salaryData),
                                 ];
                                 
                                 Salary::create($data);
@@ -272,7 +273,7 @@ class SalaryController extends Controller
                                     $advance->is_paid = 1;
                                     $advance->save();
                                 }
-    
+                            
                                 if($loan && !$loanException){
                                     $loan->paid += $loan->month;
                                     $loan->save();

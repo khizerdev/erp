@@ -319,8 +319,19 @@ class EmployeeController extends Controller
         $salaryCalculator = new SalaryService($employee, $attendance,$period,intval($request->month));
         $salaryComponent = $salaryCalculator->calculateSalary();
         
-        $result = collect(array_merge($attendance,$salaryComponent));
-        // dd($result);
+        $salaryData = json_decode($salary->salary_data);
+        $hasSalaryData = $salary->salary_data && $salaryData && !empty($salaryData);
+        
+        
+        $salaryData = json_decode($salary->salary_data);
+$hasSalaryData = $salary->salary_data && $salaryData && !empty($salaryData) && is_iterable($salaryData);
+
+if ($hasSalaryData) {
+    $result = collect($salaryData);
+} else {
+    $result = collect(array_merge($attendance, $salaryComponent));
+}
+        
         
         return view('pages.employees.payroll', compact('attendance', 'result', 'salary'));
         

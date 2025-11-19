@@ -239,7 +239,7 @@ Route::middleware(['auth'])->group(function () {
         
     });
 
-    Route::middleware(['role:super-admin|hr'])->group(function () {
+    Route::middleware(['role:super-admin|hr|dataentry'])->group(function () {
 
         Route::get('employees', [App\Http\Controllers\EmployeeController::class, 'index'])->name('employees.index');
         Route::get('employees/create', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employees.create');

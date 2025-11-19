@@ -196,10 +196,11 @@ $lateCutAmount = ($lateMinutes / 60) * $salaryPerHour;
         $gazattePay = $gazatteDaysWithoutWorked * $hoursPerDay * $salaryPerHour;
         // dd($this->attendanceData['gazatteMinutes']);
 
-        $missScanCount = $this->attendanceData['missScanCount'];
+         $missScanCount = $this->attendanceData['missScanCount'];
+        //$missScanCount = 0;
         
         if($this->period == "full_month"){
-            $missScanCleared = Missscan::where('employee_id', $this->employee->id)->where('month', $this->attendanceData['month'])->where('year', $this->attendanceData['year'])->where('duration', "full_month")->first();
+             $missScanCleared = Missscan::where('employee_id', $this->employee->id)->where('month', $this->attendanceData['month'])->where('year', $this->attendanceData['year'])->where('duration', "full_month")->first();
         } else {
             $missScanCleared = Missscan::where('employee_id', $this->employee->id)
             ->where('month', $this->attendanceData['month'])
@@ -246,8 +247,11 @@ $earlyOutCutAmount = ($earlyOutMins / 60) * $salaryPerHour;
         $missAmount = 0;
         $missScanPerDayAmount = 0;
         $missDaysAmount = 0;
-        
-        if ($missScanCleared) {
+          
+          
+         //if ($missScanCleared) { 
+         if ($missScanCount) {
+        //if (true) {
             $missScanPerDayAmount = $this->employee->salary / $this->monthDays;
             $dayRatio = (int) floor($missScanCount / 3); // 0.33 => 0
 
@@ -325,7 +329,7 @@ $earlyOutCutAmount = ($earlyOutMins / 60) * $salaryPerHour;
             'missDeductDays' => $missDeductDays,
             'missAmount' => $missAmount,
             'missScanCount' => $missScanCount,
-            'missScanCleared' => $missScanCleared ? 'Yes' : 'No',
+            'missScanCleared' => true ? 'Yes' : 'No',
             'sandwichDeduct' => $sandWhichViolations . ' Days - Amount ' . $perDayAmount * $sandWhichViolations,
             'totalSandwichViolations' => $sandWhichViolations,
 

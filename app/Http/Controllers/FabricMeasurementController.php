@@ -20,6 +20,7 @@ class FabricMeasurementController extends Controller
         'design_code' => 'required|string',
         'design_picture' => 'nullable',
         'design_stitch' => 'required|string|max:255',
+        'design_size' => 'required|string|max:255',
     ]);
 
     $data = $request->all(); // Don't exclude design_picture here
@@ -74,7 +75,7 @@ class FabricMeasurementController extends Controller
         ]);
 
         $measurement = FabricMeasurement::findOrFail($id);
-        $measurement->update($request->only('unit_of_measure','design_stitch','front_yarn','back_yarn', 'design_code'));
+        $measurement->update($request->only('unit_of_measure','design_stitch','design_size','front_yarn','back_yarn', 'design_code'));
 
         return redirect()->route('fabric-measurements.index')->with('success', 'Record updated successfully.');
     }

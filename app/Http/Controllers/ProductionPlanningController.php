@@ -22,7 +22,7 @@ class ProductionPlanningController extends Controller
                     $showUrl = route('production-plannings.show', $row->id);
                     
                     $btn = '<a href="'.$editUrl.'" class="edit btn btn-primary btn-sm mr-2">Edit</a>';
-                    $btn .= '<a href="'.$showUrl.'" class="edit btn btn-success btn-sm">View</a>';
+                    $btn .= '<a href="'.$showUrl.'" target="blank" class="edit btn btn-success btn-sm">View</a>';
                     $btn .= ' <button onclick="deleteRecord('.$row->id.')" class="delete btn btn-danger btn-sm">Delete</button>';
                     
                     // $btn = $edit;
@@ -34,12 +34,16 @@ class ProductionPlanningController extends Controller
         
         return view('pages.production_plannings.index');
     }
+public function create()
+{
+    // Fetch all open sale orders with their items
+    $openSaleOrders = \App\Models\SaleOrder::with(['items.design', 'items.color', 'customer'])
+                        ->where('order_status', 'open') // adjust column name for open status
+                        ->get();
 
-    public function create()
-    {
-        return view('pages.production_plannings.create');
-    }
-    
+    return view('pages.production_plannings.create', compact('openSaleOrders'));
+}
+
     public function reportForm()
     {
         return view('pages.reports.production_planning.index');
@@ -81,7 +85,6 @@ class ProductionPlanningController extends Controller
     $request->validate([
         'date' => 'required|date',
         'machine_id' => 'required|exists:machines,id',
-        'sale_order_id' => 'required|exists:sale_orders,id',
         'selected_items' => 'required|array|min:1',
         'selected_items.*' => 'exists:sale_order_items,id',
     ]);

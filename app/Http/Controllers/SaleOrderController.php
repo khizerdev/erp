@@ -22,7 +22,7 @@ class SaleOrderController extends Controller
 
                 $btn = '<a href="'.$editUrl.'" class="edit btn btn-primary btn-sm mr-2"><i class="fas fa-edit" aria-hidden="true"></i></a>';
                 
-                $btn .= '<a href="'.$showUrl.'" class="edit btn btn-success btn-sm mr-2"><i class="fas fa-eye" aria-hidden="true"></i></a>';
+                $btn .= '<a href="'.$showUrl.'"target="_blank" class="edit btn btn-success btn-sm mr-2"><i class="fas fa-eye" aria-hidden="true"></i></a>';
 
                 
                 $btn .= ' <button onclick="deleteRecord('.$row->id.')" class="delete btn btn-danger btn-sm">Delete</button>';
@@ -82,9 +82,10 @@ private function convertAmountToWords($amount)
     {
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'po_date' => 'required|date',
             'order_status' => 'required|in:open,hold,cleared',
-            'order_reference' => 'required|string|max:255',
-            'advance_payment' => 'required|numeric',
+            'order_reference' => 'nullable|string|max:255',
+            'advance_payment' => 'nullable|numeric',
             'delivery_date' => 'required|date',
             'payment_terms' => 'nullable|string',
             'description' => 'nullable|string',
@@ -103,7 +104,7 @@ private function convertAmountToWords($amount)
     
         // Create the sale order with all fields including the generated sale_no
         $saleOrder = SaleOrder::create(array_merge(
-            $request->only('customer_id', 'order_status', 'order_reference', 'advance_payment', 'delivery_date', 'payment_terms', 'description'),
+            $request->only('customer_id', 'order_status', 'po_date', 'order_reference', 'advance_payment', 'delivery_date', 'payment_terms', 'description'),
             ['sale_no' => $saleNo]
         ));
         
@@ -136,6 +137,7 @@ private function convertAmountToWords($amount)
 {
     $request->validate([
         'customer_id' => 'required|exists:customers,id',
+        'po_date' => 'required|date',
         'order_status' => 'required|in:open,hold,cleared',
         'order_reference' => 'required|string|max:255',
         'advance_payment' => 'required|numeric',
@@ -168,6 +170,7 @@ private function convertAmountToWords($amount)
     // Update the main sale order
     $saleOrder->update($request->only([
         'customer_id', 
+        'po_date',
         'order_status', 
         'order_reference', 
         'advance_payment', 
